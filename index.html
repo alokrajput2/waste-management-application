@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWaste - Advanced Waste Management</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2E7D32;
+            --accent-color: #8BC34A;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --card-bg: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(rgba(76, 175, 80, 0.8), rgba(46, 125, 50, 0.8)), url('https://images.unsplash.com/photo-1584473457406-6240486418e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* Waste Sorter Styles */
+        .waste-sorter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .bin {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .bin h3 {
+            margin-bottom: 1rem;
+        }
+
+        .bin-icon {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+
+        .draggable-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .waste-item {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            cursor: grab;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .waste-item:active {
+            cursor: grabbing;
+        }
+
+        .waste-item:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .correct-drop {
+            animation: pulse-green 1s;
+            border: 2px solid var(--success-color);
+        }
+
+        .incorrect-drop {
+            animation: shake 0.5s;
+            border: 2px solid var(--error-color);
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Collection Schedule Styles */
+        .schedule-container {
+            margin: 2rem 0;
+        }
+
+        .schedule-calendar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .collection-day {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .collection-day h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Waste Scanner Styles */
+        .waste-scanner {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .scanner-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #scanner-video, #scanner-canvas {
+            width: 100%;
+            border-radius: 8px;
+            background-color: #000;
+        }
+
+        #scanner-canvas {
+            display: none;
+        }
+
+        .scan-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            margin: 2rem 0;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            margin: 2rem 0;
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .waste-sorter {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Accessibility Focus Styles */
+        a:focus, button:focus, input:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">EcoWaste</div>
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="#sorting-guide">Sorting Guide</a></li>
+                <li><a href="#collection-schedule">Collection Schedule</a></li>
+                <li><a href="#waste-scanner">Waste Scanner</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+            </ul>
+        </nav>
+        <button class="theme-toggle" aria-label="Toggle dark mode">🌓</button>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Smart Waste Management for a Cleaner Future</h1>
+            <p>Join our community to learn proper waste disposal, track collection schedules, and contribute to a sustainable environment.</p>
+            <a href="#sorting-guide" class="btn btn-primary">Get Started</a>
+        </section>
+
+        <section id="sorting-guide">
+            <h2>Interactive Waste Sorting Guide</h2>
+            <p>Drag each item to the correct bin to learn proper waste disposal</p>
+            
+            <div class="waste-sorter">
+                <div class="bin" data-bin="recycling" id="recycling-bin">
+                    <h3>Recycling Bin</h3>
+                    <div class="bin-icon">♻️</div>
+                    <p>Paper, plastic, glass, metal</p>
+                </div>
+                
+                <div class="bin" data-bin="compost" id="compost-bin">
+                    <h3>Compost</h3>
+                    <div class="bin-icon">🍂</div>
+                    <p>Food scraps, yard waste</p>
+                </div>
+                
+                <div class="bin" data-bin="landfill" id="landfill-bin">
+                    <h3>Landfill</h3>
+                    <div class="bin-icon">🗑️</div>
+                    <p>Non-recyclable waste</p>
+                </div>
+                
+                <div class="bin" data-bin="hazardous" id="hazardous-bin">
+                    <h3>Hazardous</h3>
+                    <div class="bin-icon">⚠️</div>
+                    <p>Batteries, chemicals, electronics</p>
+                </div>
+            </div>
+            
+            <div class="draggable-items">
+                <div class="waste-item" draggable="true" data-type="plastic" id="plastic-bottle">Plastic Bottle</div>
+                <div class="waste-item" draggable="true" data-type="paper" id="newspaper">Newspaper</div>
+                <div class="waste-item" draggable="true" data-type="food" id="apple-core">Apple Core</div>
+                <div class="waste-item" draggable="true" data-type="hazardous" id="battery">Battery</div>
+                <div class="waste-item" draggable="true" data-type="glass" id="glass-bottle">Glass Bottle</div>
+                <div class="waste-item" draggable="true" data-type="landfill" id="plastic-bag">Plastic Bag</div>
+            </div>
+            
+            <div id="sorting-feedback" class="scan-results" style="display: none;"></div>
+        </section>
+
+        <section id="collection-schedule" class="schedule-container">
+            <h2>Waste Collection Schedule</h2>
+            <p>Find your next collection day based on your location</p>
+            
+            <button id="get-location-btn" class="btn btn-primary">Use My Location</button>
+            <div id="location-error" style="color: var(--error-color); margin-top: 1rem; display: none;"></div>
+            
+            <div class="schedule-calendar" id="schedule-calendar" style="display: none;">
+                <!-- Filled dynamically by JavaScript -->
+            </div>
+            
+            <div id="manual-address" style="margin-top: 1rem; display: none;">
+                <input type="text" id="address-input" placeholder="Enter your address">
+                <button id="submit-address" class="btn">Search</button>
+            </div>
+        </section>
+
+        <section id="waste-scanner" class="waste-scanner">
+            <h2>AI Waste Identification</h2>
+            <p>Use your camera to identify waste items and learn how to dispose of them properly</p>
+            
+            <div class="scanner-container">
+                <video id="scanner-video" autoplay playsinline></video>
+                <canvas id="scanner-canvas"></canvas>
+                <button id="capture-btn" class="btn btn-primary" style="margin-top: 1rem;">Identify Waste</button>
+            </div>
+            
+            <div class="scan-results" id="scan-results" style="display: none;">
+                <h3>Identification Result</h3>
+                <div id="waste-result"></div>
+                <div id="disposal-instructions"></div>
+            </div>
+        </section>
+
+        <section id="dashboard">
+            <h2>Your Waste Management Dashboard</h2>
+            <p>Track your recycling progress and environmental impact</p>
+            
+            <div class="stats-cards">
+                <div class="stat-card" id="recycled-this-week">
+                    <h3>Recycled This Week</h3>
+                    <div class="stat-value">0 kg</div>
+                </div>
+                <div class="stat-card" id="total-recycled">
+                    <h3>Total Recycled</h3>
+                    <div class="stat-value">0 kg</div>
+                </div>
+                <div class="stat-card" id="co2-saved">
+                    <h3>CO₂ Saved</h3>
+                    <div class="stat-value">0 kg</div>
+                </div>
+                <div class="stat-card" id="current-streak">
+                    <h3>Current Streak</h3>
+                    <div class="stat-value">0 days</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="waste-stats-chart"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Waste Sorting Game
+        const wasteItems = document.querySelectorAll('.waste-item');
+        const bins = document.querySelectorAll('.bin');
+        const feedbackElement = document.getElementById('sorting-feedback');
+
+        const correctBins = {
+            'plastic': 'recycling',
+            'paper': 'recycling',
+            'food': 'compost',
+            'hazardous': 'hazardous',
+            'glass': 'recycling',
+            'landfill': 'landfill'
+        };
+
+        wasteItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', item.dataset.type);
+                e.dataTransfer.setData('item-id', item.id);
+            });
+        });
+
+        bins.forEach(bin => {
+            bin.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            bin.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const wasteType = e.dataTransfer.getData('text/plain');
+                const itemId = e.dataTransfer.getData('item-id');
+                const item = document.getElementById(itemId);
+                const correctBin = correctBins[wasteType];
+                
+                // Remove any previous feedback
+                bins.forEach(b => {
+                    b.classList.remove('correct-drop', 'incorrect-drop');
+                });
+                feedbackElement.style.display = 'none';
+
+                if (bin.dataset.bin === correctBin) {
+                    bin.classList.add('correct-drop');
+                    feedbackElement.style.display = 'block';
+                    feedbackElement.innerHTML = `
+                        <h3>Correct! 🎉</h3>
+                        <p>The ${item.textContent} goes in the ${bin.querySelector('h3').textContent}.</p>
+                    `;
+                    feedbackElement.style.backgroundColor = 'var(--success-color)';
+                    feedbackElement.style.color = 'white';
+                    
+                    // Update recycling stats
+                    updateRecyclingStats(wasteType);
+                } else {
+                    bin.classList.add('incorrect-drop');
+                    feedbackElement.style.display = 'block';
+                    feedbackElement.innerHTML = `
+                        <h3>Not Quite Right</h3>
+                        <p>The ${item.textContent} should go in the ${document.getElementById(correctBin + '-bin').querySelector('h3').textContent}.</p>
+                    `;
+                    feedbackElement.style.backgroundColor = 'var(--error-color)';
+                    feedbackElement.style.color = 'white';
+                }
+            });
+        });
+
+        // Collection Schedule with Geolocation
+        const locationBtn = document.getElementById('get-location-btn');
+        const locationError = document.getElementById('location-error');
+        const scheduleCalendar = document.getElementById('schedule-calendar');
+        const manualAddress = document.getElementById('manual-address');
+        const addressInput = document.getElementById('address-input');
+        const submitAddress = document.getElementById('submit-address');
+
+        locationBtn.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                locationBtn.textContent = 'Locating...';
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        fetchCollectionSchedule(latitude, longitude);
+                    },
+                    (error) => {
+                        locationBtn.textContent = 'Use My Location';
+                        locationError.textContent = 'Location access denied. Please enter your address manually.';
+                        locationError.style.display = 'block';
+                        manualAddress.style.display = 'block';
+                    }
+                );
+            } else {
+                locationError.textContent = 'Geolocation is not supported by your browser. Please enter your address manually.';
+                locationError.style.display = 'block';
+                manualAddress.style.display = 'block';
+            }
+        });
+
+        submitAddress.addEventListener('click', () => {
+            if (addressInput.value.trim()) {
+                fetchCollectionSchedule(null, null, addressInput.value.trim());
+            }
+        });
+
+        async function fetchCollectionSchedule(lat, lng, address = null) {
+            try {
+                // Simulate API call with mock data
+                locationBtn.textContent = 'Loading...';
+                
+                // Mock response - in a real app, this would be a fetch to your backend
+                setTimeout(() => {
+                    const mockSchedule = [
+                        { day: 'Monday', type: 'Recycling', nextPickup: 'Tomorrow' },
+                        { day: 'Wednesday', type: 'Compost', nextPickup: 'May 15' },
+                        { day: 'Friday', type: 'Landfill', nextPickup: 'May 17' }
+                    ];
+                    
+                    renderScheduleCalendar(mockSchedule);
+                    locationBtn.textContent = 'Use My Location';
+                }, 1000);
+            } catch (error) {
+                locationError.textContent = 'Error fetching schedule. Please try again later.';
+                locationError.style.display = 'block';
+                locationBtn.textContent = 'Use My Location';
+            }
+        }
+
+        function renderScheduleCalendar(schedule) {
+            scheduleCalendar.innerHTML = '';
+            schedule.forEach(item => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'collection-day';
+                dayElement.innerHTML = `
+                    <h4>${item.day}</h4>
+                    <p><strong>Type:</strong> ${item.type}</p>
+                    <p><strong>Next Pickup:</strong> ${item.nextPickup}</p>
+                `;
+                scheduleCalendar.appendChild(dayElement);
+            });
+            scheduleCalendar.style.display = 'grid';
+        }
+
+        // Waste Scanner Functionality
+        const video = document.getElementById('scanner-video');
+        const canvas = document.getElementById('scanner-canvas');
+        const captureBtn = document.getElementById('capture-btn');
+        const scanResults = document.getElementById('scan-results');
+        const wasteResult = document.getElementById('waste-result');
+        const disposalInstructions = document.getElementById('disposal-instructions');
+
+        // Mock waste identification database
+        const wasteDatabase = {
+            'plastic-bottle': {
+                name: 'Plastic Bottle',
+                type: 'recycling',
+                instructions: 'Rinse and remove cap before recycling. Check local guidelines for plastic types accepted.'
+            },
+            'paper': {
+                name: 'Paper Product',
+                type: 'recycling',
+                instructions: 'Keep dry and clean. Flatten boxes to save space.'
+            },
+            'food': {
+                name: 'Food Waste',
+                type: 'compost',
+                instructions: 'Can be composted at home or through municipal collection if available.'
+            },
+            'battery': {
+                name: 'Battery',
+                type: 'hazardous',
+                instructions: 'Take to a hazardous waste collection point. Do not dispose in regular trash.'
+            }
+        };
+
+        captureBtn.addEventListener('click', () => {
+            // In a real app, this would capture the image and send to an AI API
+            // For demo purposes, we'll simulate a response
+            
+            // Show loading state
+            captureBtn.textContent = 'Identifying...';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Mock response - would be from your API in reality
+                const mockIdentifiedItem = 'plastic-bottle';
+                const itemInfo = wasteDatabase[mockIdentifiedItem];
+                
+                // Display results
+                wasteResult.textContent = `Identified: ${itemInfo.name}`;
+                
+                let binInfo = '';
+                switch(itemInfo.type) {
+                    case 'recycling':
+                        binInfo = '♻️ Recycling Bin';
+                        break;
+                    case 'compost':
+                        binInfo = '🍂 Compost Bin';
+                        break;
+                    case 'hazardous':
+                        binInfo = '⚠️ Hazardous Waste';
+                        break;
+                    default:
+                        binInfo = '🗑️ Landfill';
+                }
+                
+                disposalInstructions.innerHTML = `
+                    <p><strong>Disposal:</strong> ${binInfo}</p>
+                    <p>${itemInfo.instructions}</p>
+                `;
+                
+                scanResults.style.display = 'block';
+                captureBtn.textContent = 'Identify Waste';
+                
+                // Update stats if recycled
+                if (itemInfo.type === 'recycling') {
+                    updateRecyclingStats(itemInfo.type);
+                }
+            }, 1500);
+        });
+
+        // Initialize camera
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Camera access denied:", err);
+                captureBtn.disabled = true;
+                captureBtn.textContent = 'Camera Not Available';
+            }
+        }
+
+        // Dashboard and Stats
+        let recyclingStats = {
+            weekly: 0,
+            total: 0,
+            co2Saved: 0,
+            streak: 0
+        };
+
+        function updateRecyclingStats(type) {
+            // Simulate adding some weight based on item type
+            let weightAdded = 0;
+            
+            switch(type) {
+                case 'plastic':
+                case 'glass':
+                    weightAdded = 0.1; // kg
+                    break;
+                case 'paper':
+                    weightAdded = 0.05; // kg
+                    break;
+                default:
+                    weightAdded = 0.02; // kg
+            }
+            
+            recyclingStats.weekly += weightAdded;
+            recyclingStats.total += weightAdded;
+            
+            // Estimate CO2 savings (very rough estimate)
+            recyclingStats.co2Saved = recyclingStats.total * 0.5;
+            
+            // Update streak if they've been active this week
+            recyclingStats.streak = Math.min(7, recyclingStats.streak + 1);
+            
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            document.getElementById('recycled-this-week').querySelector('.stat-value').textContent = 
+                recyclingStats.weekly.toFixed(2) + ' kg';
+            document.getElementById('total-recycled').querySelector('.stat-value').textContent = 
+                recyclingStats.total.toFixed(2) + ' kg';
+            document.getElementById('co2-saved').querySelector('.stat-value').textContent = 
+                recyclingStats.co2Saved.toFixed(2) + ' kg';
+            document.getElementById('current-streak').querySelector('.stat-value').textContent = 
+                recyclingStats.streak + ' days';
+            
+            // Update chart
+            updateChart();
+        }
+
+        // Chart.js Implementation
+        function updateChart() {
+            const ctx = document.getElementById('waste-stats-chart').getContext('2d');
+            
+            // Destroy previous chart if it exists
+            if (window.wasteChart) {
+                window.wasteChart.destroy();
+            }
+            
+            window.wasteChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
+                    datasets: [{
+                        label: 'Recycled Waste (kg)',
+                        data: [3.2, 4.1, 3.8, 4.5, recyclingStats.weekly],
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kilograms'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Week'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            initCamera();
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
